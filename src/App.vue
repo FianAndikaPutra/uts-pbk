@@ -9,7 +9,11 @@
 
     <ul>
       <li v-for="(task, index) in tasks" :key="index">
-        {{ task.text }}
+        <span @click="toggleTask(index)">
+          <span v-if="task.done">[✔]</span>
+          <span v-else>[ ]</span>
+          {{ task.text }}
+        </span>
         <button @click="deleteTask(index)">Hapus</button>
       </li>
     </ul>
@@ -25,9 +29,13 @@ const tasks = ref([])
 function addTask() {
   const text = newTask.value.trim()
   if (text) {
-    tasks.value.push({ text })
+    tasks.value.push({ text, done: false })
     newTask.value = ''
   }
+}
+
+function toggleTask(index) {
+  tasks.value[index].done = !tasks.value[index].done
 }
 
 function deleteTask(index) {
