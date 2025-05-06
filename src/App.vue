@@ -3,6 +3,13 @@
     <h1>LIST KEGIATAN</h1>
 
     <div>
+      <label>
+        <input type="checkbox" v-model="showCompleted" />
+        Tampilkan Selesai
+      </label>
+    </div>
+
+    <div>
       <input v-model="newTask" placeholder="Tulis Kegiatan Mu..." />
       <input type="date" v-model="taskDate" />
       <input type="time" v-model="taskTime" />
@@ -10,7 +17,7 @@
     </div>
 
     <ul>
-      <li v-for="(task, index) in tasks" :key="index">
+      <li v-for="(task, index) in filteredTasks" :key="index">
         <span @click="toggleTask(index)">
           <span v-if="task.done">[✔]</span>
           <span v-else>[ ]</span>
@@ -23,12 +30,20 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 const newTask = ref('')
 const taskDate = ref('')
 const taskTime = ref('')
 const tasks = ref([])
+const showCompleted = ref(false)
+
+const filteredTasks = computed(() => {
+  if (showCompleted.value) {
+    return tasks.value
+  }
+  return tasks.value.filter(task => !task.done)
+})
 
 function addTask() {
   const text = newTask.value.trim()
