@@ -16,7 +16,7 @@
       <button @click="addTask">Tambah</button>
     </div>
 
-    <ul>
+    <transition-group name="fade" tag="ul">
       <li v-for="(task, index) in filteredTasks" :key="index">
         <span @click="toggleTask(index)">
           <span v-if="task.done">[✔]</span>
@@ -25,7 +25,7 @@
         </span>
         <button @click="deleteTask(index)">Hapus</button>
       </li>
-    </ul>
+    </transition-group>
   </div>
 </template>
 
@@ -39,10 +39,9 @@ const tasks = ref([])
 const showCompleted = ref(false)
 
 const filteredTasks = computed(() => {
-  if (showCompleted.value) {
-    return tasks.value
-  }
-  return tasks.value.filter(task => !task.done)
+  return showCompleted.value
+    ? tasks.value
+    : tasks.value.filter(task => !task.done)
 })
 
 function addTask() {
@@ -70,4 +69,12 @@ function deleteTask(index) {
 </script>
 
 <style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
 </style>
