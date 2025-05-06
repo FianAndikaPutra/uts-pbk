@@ -6,6 +6,12 @@
       <input v-model="newTask" placeholder="Tulis Kegiatan Mu..." />
       <button @click="addTask">Tambah</button>
     </div>
+
+    <ul>
+      <li v-for="(task, index) in tasks" :key="index">
+        {{ task.text }}
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -13,9 +19,14 @@
 import { ref } from 'vue'
 
 const newTask = ref('')
+const tasks = ref([])
 
 function addTask() {
-  console.log('Tambah:', newTask.value)
+  const text = newTask.value.trim()
+  if (text) {
+    tasks.value.push({ text })
+    newTask.value = ''
+  }
 }
 </script>
 
